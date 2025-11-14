@@ -11,13 +11,23 @@
     <!-- Власні стилі -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
+<body class="{% if theme == 'dark' %}bg-dark text-white{% else %}bg-light text-dark{% endif %}">
 
     <!-- Навігаційне меню -->
     {% include '_navbar.html' %}
 
     <!-- Основний контент -->
     <div class="container my-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </div>
 

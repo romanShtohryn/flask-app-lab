@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+
+<h1>Ласкаво просимо до сторінки {{ username }}!</h1>
+<p>Тут ви можете отримати інформацію та вийти з системи.</p>
+<form method="POST" action="{{ url_for('users.logout') }}">
+    <button type="submit" class="btn btn-danger">Вийти</button>
+</form>
+
+<hr>
+
+<h2>Вибір кольорової схеми:</h2>
+<a href="{{ url_for('users.set_theme', theme='light') }}" class="btn btn-secondary">Світла</a>
+<a href="{{ url_for('users.set_theme', theme='dark') }}" class="btn btn-dark">Темна</a>
+
+<hr>
+
+<h2>Додати кукі:</h2>
+<form method="POST" action="{{ url_for('users.add_cookie') }}">
+  <div class="mb-3">
+    <label class="form-label">Ключ</label>
+    <input type="text" name="key" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Значення</label>
+    <input type="text" name="value" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Термін дії (сек)</label>
+    <input type="number" name="max_age" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary">Додати кукі</button>
+</form>
+
+<hr>
+
+<h2>Видалити кукі за ключем:</h2>
+<form method="POST" action="{{ url_for('users.delete_cookie') }}">
+  <div class="mb-3">
+    <label class="form-label">Ключ для видалення</label>
+    <input type="text" name="delete_key" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-warning">Видалити</button>
+</form>
+
+<hr>
+
+<h2>Видалити всі кукі:</h2>
+<form method="POST" action="{{ url_for('users.delete_all_cookies') }}">
+  <button type="submit" class="btn btn-danger">Видалити всі</button>
+</form>
+
+<hr>
+
+<h2>Список всіх кукі:</h2>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Ключ</th>
+      <th>Значення</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key, value in cookies.items() %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
