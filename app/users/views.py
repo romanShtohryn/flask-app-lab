@@ -1,5 +1,6 @@
 from flask import request, redirect, url_for, render_template, flash, session, make_response
 from . import users_bp
+from app.forms import LoginForm
 
 @users_bp.route("/hi/<string:name>")
 def greetings(name):
@@ -14,19 +15,24 @@ def admin():
 
 @users_bp.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
 
         if username == "user1" and password == "12345":
             session["username"] = username
-            flash("Login successful!", "success")
+            msg = f"Login successful! Welcome {username}."
+            if form.remember.data:
+                msg += " Remember option selected."
+            flash(msg, "success")
             return redirect(url_for("users.profile"))
         else:
             flash("Wrong data! Try again!", "danger")
             return redirect(url_for("users.login"))
 
-    return render_template("users/login.html")
+    return render_template("users/login.html", form=form)
+
 
 @users_bp.route("/profile", methods=["GET", "POST"])
 def profile():
