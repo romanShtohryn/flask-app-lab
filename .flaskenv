@@ -1,3 +1,6 @@
 FLASK_DEBUG=1
-FLASK_APP=app.py
+FLASK_APP=run.py
 FLASK_RUN_PORT=8080
+FLASK_ENV=development
+SECRET_KEY=secret-key
+DATABASE_URL=sqlite:///instance/data.sqlite

@@ -1,18 +1,30 @@
-from flask import Flask
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from config import DevelopmentConfig
 
-app = Flask(__name__)
-app.config.from_pyfile("../config.py")
+db = SQLAlchemy()
+migrate = Migrate()
 
-from . import views
+def create_app(config_class=DevelopmentConfig):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-from .users import users_bp
-app.register_blueprint(users_bp, url_prefix="/users")
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-from .products import products_bp
-app.register_blueprint(products_bp, url_prefix="/products")
+    # реєстрація блюпринтів
+    from app.posts import post_bp
+    app.register_blueprint(post_bp, url_prefix="/post")
 
-@app.context_processor
-def inject_theme():
-    from flask import request
-    theme = request.cookies.get("theme", "light")
-    return dict(theme=theme)
+    from app.users import users_bp
+    app.register_blueprint(users_bp, url_prefix="/users")
+
+    from app.products import products_bp
+    app.register_blueprint(products_bp, url_prefix="/products")
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template("404.html"), 404
+
+    return app

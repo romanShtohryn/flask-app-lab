@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>All Posts</h2>
+    <ul class="list-group">
+        {% for post in posts %}
+        <li class="list-group-item">
+            <a href="{{ url_for('posts.detail_post', id=post.id) }}">{{ post.title }}</a>
+            <small class="text-muted">by {{ post.author }} on {{ post.posted.strftime('%Y-%m-%d') }}</small>
+        </li>
+        {% else %}
+        <li class="list-group-item">No posts yet.</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('posts.create_post') }}" class="btn btn-primary mt-3">Add New Post</a>
+</div>
+{% endblock %}
